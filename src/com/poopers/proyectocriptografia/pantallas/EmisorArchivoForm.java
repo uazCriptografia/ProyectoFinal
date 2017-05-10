@@ -1,6 +1,9 @@
 package com.poopers.proyectocriptografia.pantallas;
 
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  * Este frame es usado por los emisores de archivos que le enviarán archivos al
@@ -30,21 +33,29 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jtfDireccionIpServidor = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jtfIPCliente = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jtfClavePublica = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        jtfClavePrivada = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jtfNombreUsuario = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jtfIpAutoridad = new javax.swing.JTextField();
+        btnSolicitarClave = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jtfEstatusCliente = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
         setSize(new java.awt.Dimension(800, 600));
 
         lblTituloEmisor.setFont(new java.awt.Font("Noto Sans", 0, 24)); // NOI18N
@@ -55,13 +66,11 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 20));
 
-        jLabel2.setText("Dirección IP del receptor: ");
+        jLabel2.setText("<html><strong>Instrucciones: </strong> <br>1. Ingresa el nombre de usuario con el que se te identificará.<br>2. Ingresa la IP de la autoridad certificadora.<br>3. Ingresa la IP del servidor a donde enviarás el archivo.<br>4. Solicita tus claves.<br>5. Elige tu archivo a enviar.<html>");
+        jLabel2.setMaximumSize(new java.awt.Dimension(800, 20));
         jPanel4.add(jLabel2);
-
-        jtfDireccionIpServidor.setPreferredSize(new java.awt.Dimension(200, 31));
-        jPanel4.add(jtfDireccionIpServidor);
 
         jPanel2.add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
@@ -71,25 +80,43 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         jLabel3.setText("Dirección IP:");
 
+        jtfIPCliente.setEditable(false);
+
         jLabel4.setText("Clave pública:");
 
+        jtfClavePublica.setEditable(false);
+
         jLabel5.setText("Clave privada:");
+
+        jtfClavePrivada.setEditable(false);
+
+        jLabel6.setText("Nombre de usuario:");
+
+        jLabel7.setText("IP de autoridad:");
+
+        btnSolicitarClave.setText("Solicitar clave");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(jTextField3)
-                    .addComponent(jTextField2))
+                    .addComponent(btnSolicitarClave, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                        .addComponent(jtfNombreUsuario)
+                        .addComponent(jtfClavePrivada)
+                        .addComponent(jtfClavePublica)
+                        .addComponent(jtfIPCliente)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -98,31 +125,54 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfIPCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfClavePublica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(209, Short.MAX_VALUE))
+                    .addComponent(jtfClavePrivada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jtfNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSolicitarClave)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.add(jPanel7);
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Envío del Archivo"));
 
+        jButton1.setText("Elegir archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 421, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 326, Short.MAX_VALUE)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         jPanel6.add(jPanel8);
@@ -143,6 +193,20 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(EmisorArchivoForm.this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            JOptionPane.showMessageDialog(EmisorArchivoForm.this, 
+                    "Se enviará el archivo elegido");
+        } else {
+            JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                    "Cancelaste el envío del archivo", "Cancelación",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,11 +244,15 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSolicitarClave;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -192,11 +260,12 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jtfDireccionIpServidor;
+    private javax.swing.JTextField jtfClavePrivada;
+    private javax.swing.JTextField jtfClavePublica;
     private javax.swing.JTextField jtfEstatusCliente;
+    private javax.swing.JTextField jtfIPCliente;
+    private javax.swing.JTextField jtfIpAutoridad;
+    private javax.swing.JTextField jtfNombreUsuario;
     private javax.swing.JLabel lblTituloEmisor;
     // End of variables declaration//GEN-END:variables
 
