@@ -5,6 +5,7 @@
  */
 package com.poopers.proyectocriptografia.logica;
 
+import java.io.File;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -108,5 +109,11 @@ public class CifradoRsa {
         System.out.println(" Original: " + originalText);
         System.out.println("Encrypted: " + cipherText.toString());
         System.out.println("Decrypted: " + plainText);
+
+        File destinoSerializado = Serializacion.serialize(keyPair.getPublic(),
+                "publicKey");
+        PublicKey desSerializado = (PublicKey) Serializacion
+                .deserialize("publicKey");
+        System.out.println(desSerializado.getEncoded());
     }
 }
