@@ -1,12 +1,13 @@
 package com.poopers.proyectocriptografia.logica;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 
 /**
  * Esta clase representa un registro de una entidad que fue certificada por la
  * autoridad certificadora, que almacena su nombre y su llave pública.
  */
-public class EntidadCertificada {
+public class EntidadCertificada implements Serializable {
 
     private String nombre;
     private PublicKey llavePublica;
@@ -22,5 +23,10 @@ public class EntidadCertificada {
 
     public PublicKey getLlavePublica() {
         return llavePublica;
+    }
+
+    @Override
+    public String toString() {
+        return "EntidadCertificada(" + nombre + ")";
     }
 }

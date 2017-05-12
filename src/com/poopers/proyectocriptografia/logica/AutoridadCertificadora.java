@@ -9,8 +9,6 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Esta entidad tiene la responsabilidad de generar las llaves públicas y
@@ -22,10 +20,12 @@ import java.util.logging.Logger;
 public class AutoridadCertificadora {
 
     private List<EntidadCertificada> entidadesCertificadas;
+    private CifradoRsa cifradoRsa;
     private static final int PUERTO = 4321;
 
     public AutoridadCertificadora() {
         entidadesCertificadas = new ArrayList<>();
+        cifradoRsa = new CifradoRsa();
     }
 
     public void receiveMessage() throws IOException {
@@ -38,16 +38,34 @@ public class AutoridadCertificadora {
                 new InputStreamReader(sourceSocket.getInputStream()));
         // Writer para enviar respuestas al cliente
         PrintStream output = new PrintStream(sourceSocket.getOutputStream());
-        System.out.println("Destino> Recibiendo el mensaje...");
         // Lee mensaje del cliente
         String message = clientInput.readLine();
-        // Limpia la entrada
-        output.flush();
-        // Envía la respuesta al cliente
-        output.println("Destino> Mensaje recibido");
-        System.out.println("Destino> Mensaje recibido");
+        // Se manda procesar el mensaje
+        procesarMensaje(output, message);
         // Cierra la conexión
         sourceSocket.close();
+        serverSocket.close();
+    }
+
+    private void procesarMensaje(PrintStream output, String mensaje) {
+        System.out.println("AutoridadCertificadora.procesarMensaje");
+        String[] partes = mensaje.split(" ");
+        if (mensaje.startsWith("GENERAR_LLAVES")) {
+            System.out.println(">> Procesar GENERAR_LLAVES");
+            String privateFilename = "privateSent_" + partes[1];
+            String publicFilename = "publicSent_" + partes[1];
+            KeyPair keyPair = generarClaves(partes[1]);
+            Serializacion.serialize(keyPair.getPublic(), publicFilename);
+            Serializacion.serialize(keyPair.getPrivate(), privateFilename);
+            output.flush();
+            output.println(FileUtils.encodeFile(publicFilename));
+            output.println(FileUtils.encodeFile(privateFilename));
+        } else if (mensaje.startsWith("OBTENER_ENTIDADES_CERTIFICADAS")) {
+            Serializacion.serialize(entidadesCertificadas,
+                    "entidadesCertificadas");
+            output.flush();
+            output.println(FileUtils.encodeFile("entidadesCertificadas"));
+        }
     }
 
     public EntidadCertificada buscarEntidad(String nombreEntidad) {
@@ -78,10 +96,11 @@ public class AutoridadCertificadora {
     public static void main(String[] args) {
         try {
             AutoridadCertificadora autoridad = new AutoridadCertificadora();
-            autoridad.receiveMessage();
+            while (true) {
+                autoridad.receiveMessage();
+            }
         } catch (IOException ex) {
-            Logger.getLogger(AutoridadCertificadora.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 }
