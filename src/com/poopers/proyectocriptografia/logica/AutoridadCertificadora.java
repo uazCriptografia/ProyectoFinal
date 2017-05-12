@@ -56,14 +56,14 @@ public class AutoridadCertificadora {
             String publicFilename = "publicSent_" + partes[1];
             KeyPair keyPair = generarClaves(partes[1]);
             output.flush();
-            if(keyPair == null) {
+            if (keyPair == null) {
                 output.println("ERROR");
             } else {
                 Serializacion.serialize(keyPair.getPublic(), publicFilename);
-            Serializacion.serialize(keyPair.getPrivate(), privateFilename);
-            output.println(FileUtils.encodeFile(publicFilename));
-            output.println(FileUtils.encodeFile(privateFilename));
-            }            
+                Serializacion.serialize(keyPair.getPrivate(), privateFilename);
+                output.println(FileUtils.encodeFile(publicFilename));
+                output.println(FileUtils.encodeFile(privateFilename));
+            }
         } else if (mensaje.startsWith("OBTENER_ENTIDADES_CERTIFICADAS")) {
             Serializacion.serialize(entidadesCertificadas,
                     "entidadesCertificadas");

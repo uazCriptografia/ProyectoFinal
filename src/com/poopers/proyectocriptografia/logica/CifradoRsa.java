@@ -57,7 +57,7 @@ public class CifradoRsa {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             cipherText = cipher.doFinal(text.getBytes());
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return cipherText;
     }
@@ -90,7 +90,9 @@ public class CifradoRsa {
         CifradoRsa cifradoRsa = new CifradoRsa();
         cifradoRsa.generateKey();
         KeyPair keyPair = cifradoRsa.generateKey();
-        String originalText = "Texto que se cifrará con clave pública";
+        String originalText = "Texto que se cifrará con clave pública" 
+                + "Texto que se cifrará con clave pública"
+                + "Texto que se cifrará con clave pública";
         byte[] cipherText = cifradoRsa.encrypt(originalText,
                 keyPair.getPublic());
         String plainText = cifradoRsa.decrypt(cipherText,

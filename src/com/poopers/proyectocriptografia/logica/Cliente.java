@@ -10,6 +10,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Cliente {
 
@@ -42,8 +43,11 @@ public class Cliente {
         output.println(message);
         // Se leen todas las respuestas del servidor
         for (int i = 0; i < expectedResponses; i++) {
+            // Agrega la respuesta actual a la lista
             respuestas.add(input.readLine());
-            System.out.println(respuestas.get(i));
+            // Imprime la respuesta actual
+//            System.out.println(respuestas.get(i));
+            // Verifica si la respuesta es de error, para dejar de recibirlas
             if (respuestas.get(i).equals("ERROR")) {
                 break;
             }
@@ -56,7 +60,7 @@ public class Cliente {
 
     public void sendFile(String filename) throws IOException {
         System.out.println("Cliente(" + usuario + ").sendFile");
-        if(publicKey == null) {
+        if (publicKey == null) {
             System.err.println("No tiene llaves");
             return;
         }
@@ -65,6 +69,7 @@ public class Cliente {
         String encodedFile = FileUtils.encodeFile(filename);
         int inicio = 0;
         int fin = 117;
+        int countBloques = 0;
         List<String> bloques = new ArrayList<>();
         while (fin <= encodedFile.length()) {
             bloques.add(encodedFile.substring(inicio, fin));
@@ -77,12 +82,32 @@ public class Cliente {
                     encodedFile.length() - restantes, encodedFile.length()));
         }
         for (String bloque : bloques) {
-            sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "BLOQUE_ARCHIVO "
-                    + idArchivo + " " + cifradoRsa.encrypt(bloque, privateKey),
-                    1);
+            boolean error = true;
+            while (error) {
+                try {
+                    sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "BLOQUE_ARCHIVO "
+                            + idArchivo + " " + cifradoRsa.encrypt(bloque, privateKey),
+                            1);
+                    error = false;
+                } catch (Exception ex) {
+
+                }
+            }
+
+            System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
         }
-        sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "ARCHIVO_TERMINADO "
-                + idArchivo, 1);
+
+        boolean error = true;
+        while (error) {
+            try {
+                sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "ARCHIVO_TERMINADO "
+                        + idArchivo, 1);
+                error = false;
+            } catch (Exception ex) {
+
+            }
+        }
+
     }
 
     public void solicitarLLaves() throws IOException {
@@ -111,7 +136,9 @@ public class Cliente {
 
     public static void main(String[] args) {
         try {
-            Cliente cliente = new Cliente("usuario1");
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Inserta el nombre del cliente");
+            Cliente cliente = new Cliente(scanner.nextLine());
             cliente.solicitarLLaves();
             cliente.sendFile("texto.txt");
         } catch (IOException ex) {
