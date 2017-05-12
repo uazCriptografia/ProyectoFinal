@@ -84,6 +84,7 @@ public class Servidor {
                     = (List<EntidadCertificada>) Serializacion
                     .deserialize("entidadesCertificadasReceived");
             System.out.println(entidades);
+            output.println("Se recibieron todos los bloques");
             // TODO Probar descifrar los archivos con cada una de las llaves 
             // públicas de las entidades certificadas para determinar cuál
             // fue el remitente.
@@ -91,6 +92,7 @@ public class Servidor {
             System.out.println(">> Procesar BLOQUE_ARCHIVO");
             int idArchivo = Integer.parseInt(partes[1]);
             bloquesArchivos.get(idArchivo).add(partes[2]);
+            output.println("Bloque recibido");
         }
     }
 

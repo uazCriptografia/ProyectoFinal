@@ -43,6 +43,10 @@ public class Cliente {
         // Se leen todas las respuestas del servidor
         for (int i = 0; i < expectedResponses; i++) {
             respuestas.add(input.readLine());
+            System.out.println(respuestas.get(i));
+            if (respuestas.get(i).equals("ERROR")) {
+                break;
+            }
         }
         // Cierra la conexión
         clientSocket.close();
@@ -52,6 +56,10 @@ public class Cliente {
 
     public void sendFile(String filename) throws IOException {
         System.out.println("Cliente(" + usuario + ").sendFile");
+        if(publicKey == null) {
+            System.err.println("No tiene llaves");
+            return;
+        }
         String idArchivo = sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR,
                 "NUEVO_ARCHIVO", 1).get(0);
         String encodedFile = FileUtils.encodeFile(filename);
@@ -83,12 +91,14 @@ public class Cliente {
         String publicFilename = "publicReceived_" + usuario;
         List<String> respuestas = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,
                 "GENERAR_LLAVES " + usuario, 2);
-        byte[] decodedPublic = FileUtils.decodeFile(respuestas.get(0));
-        byte[] decodedPrivate = FileUtils.decodeFile(respuestas.get(1));
-        FileUtils.writeFile(decodedPublic, publicFilename);
-        FileUtils.writeFile(decodedPrivate, privateFilename);
-        publicKey = (PublicKey) Serializacion.deserialize(publicFilename);
-        privateKey = (PrivateKey) Serializacion.deserialize(privateFilename);
+        if (!respuestas.get(0).equals("ERROR")) {
+            byte[] decodedPublic = FileUtils.decodeFile(respuestas.get(0));
+            byte[] decodedPrivate = FileUtils.decodeFile(respuestas.get(1));
+            FileUtils.writeFile(decodedPublic, publicFilename);
+            FileUtils.writeFile(decodedPrivate, privateFilename);
+            publicKey = (PublicKey) Serializacion.deserialize(publicFilename);
+            privateKey = (PrivateKey) Serializacion.deserialize(privateFilename);
+        }
     }
 
     public PublicKey getPublicKey() {
