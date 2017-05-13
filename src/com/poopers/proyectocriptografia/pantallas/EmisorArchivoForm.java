@@ -1,6 +1,13 @@
 package com.poopers.proyectocriptografia.pantallas;
 
+import com.poopers.proyectocriptografia.comunicacion.AutoridadCertificadora;
+import com.poopers.proyectocriptografia.comunicacion.Cliente;
+import com.poopers.proyectocriptografia.comunicacion.DetectorIP;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -9,7 +16,7 @@ import javax.swing.JOptionPane;
  * Este frame es usado por los emisores de archivos que le enviarán archivos al
  * receptor.
  */
-public class EmisorArchivoForm extends javax.swing.JFrame {
+public class EmisorArchivoForm extends JFrame {
 
     /**
      * Creates new form EmisorArchivoForm
@@ -37,26 +44,30 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jtfIPCliente = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jtfClavePublica = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jtfClavePrivada = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jtfNombreUsuario = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jtfIpAutoridad = new javax.swing.JTextField();
         btnSolicitarClave = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jtfClavePublica = new javax.swing.JTextField();
+        jtfClavePrivada = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jtfEstatusCliente = new javax.swing.JTextField();
+        btnElegirArchivo = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jtfIPServidor = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(800, 600));
         setMinimumSize(new java.awt.Dimension(800, 600));
         setResizable(false);
         setSize(new java.awt.Dimension(800, 600));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         lblTituloEmisor.setFont(new java.awt.Font("Noto Sans", 0, 24)); // NOI18N
         lblTituloEmisor.setText("Emisor de Archivos");
@@ -76,47 +87,51 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         jPanel6.setLayout(new java.awt.GridLayout(1, 2));
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Cliente"));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Solicitud de llaves"));
 
-        jLabel3.setText("Dirección IP:");
+        jLabel3.setText("IP cliente:");
 
         jtfIPCliente.setEditable(false);
-
-        jLabel4.setText("Clave pública:");
-
-        jtfClavePublica.setEditable(false);
-
-        jLabel5.setText("Clave privada:");
-
-        jtfClavePrivada.setEditable(false);
 
         jLabel6.setText("Nombre de usuario:");
 
         jLabel7.setText("IP de autoridad:");
 
         btnSolicitarClave.setText("Solicitar clave");
+        btnSolicitarClave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSolicitarClaveActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Clave pública:");
+
+        jtfClavePublica.setEditable(false);
+
+        jtfClavePrivada.setEditable(false);
+
+        jLabel5.setText("Clave privada:");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+            .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
                     .addComponent(jLabel7)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
                     .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfClavePrivada)
+                    .addComponent(jtfClavePublica)
                     .addComponent(btnSolicitarClave, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                        .addComponent(jtfNombreUsuario)
-                        .addComponent(jtfClavePrivada)
-                        .addComponent(jtfClavePublica)
-                        .addComponent(jtfIPCliente)))
+                    .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(jtfNombreUsuario)
+                    .addComponent(jtfIPCliente))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -128,20 +143,20 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
                     .addComponent(jtfIPCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jtfClavePublica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jtfClavePrivada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7)
+                    .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jtfNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jtfIpAutoridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4)
+                    .addComponent(jtfClavePublica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jtfClavePrivada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSolicitarClave)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -151,28 +166,39 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Envío del Archivo"));
 
-        jButton1.setText("Elegir archivo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnElegirArchivo.setText("Elegir archivo");
+        btnElegirArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnElegirArchivoActionPerformed(evt);
             }
         });
+
+        jLabel8.setText("IP servidor:");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+            .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnElegirArchivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtfIPServidor, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jtfIPServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnElegirArchivo)
+                .addContainerGap(201, Short.MAX_VALUE))
         );
 
         jPanel6.add(jPanel8);
@@ -181,32 +207,80 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        jLabel1.setText("Estatus: ");
-        jPanel3.add(jLabel1);
-
-        jtfEstatusCliente.setPreferredSize(new java.awt.Dimension(400, 31));
-        jPanel3.add(jtfEstatusCliente);
-
-        getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
-        int returnVal = fileChooser.showOpenDialog(EmisorArchivoForm.this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            JOptionPane.showMessageDialog(EmisorArchivoForm.this, 
-                    "Se enviará el archivo elegido");
-        } else {
+    private void btnElegirArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirArchivoActionPerformed
+        if (!clavesCorrecto) {
             JOptionPane.showMessageDialog(EmisorArchivoForm.this,
-                    "Cancelaste el envío del archivo", "Cancelación",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Asegurate de solicitar y obtener correctamente tus claves"
+                    + " pública y privada",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (jtfIPServidor.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                    "Asegúrate de colocar la IP del servidor a donde enviarás "
+                    + "el archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showOpenDialog(EmisorArchivoForm.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                final File file = fileChooser.getSelectedFile();
+                DialogLoading dialogLoading = new DialogLoading(this, true);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            clienteEmisor.sendFile(file.getAbsolutePath());
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                                    "Error en el envío del archivo", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                        dialogLoading.setVisible(false);
+                    }
+                }).start();
+                dialogLoading.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                        "Cancelaste el envío del archivo", "Cancelación",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnElegirArchivoActionPerformed
+
+    private void btnSolicitarClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarClaveActionPerformed
+        clavesCorrecto = true;
+        if (jtfIpAutoridad.getText().isEmpty()
+                || jtfNombreUsuario.getText().isEmpty()) {
+            clavesCorrecto = false;
+        }
+        if (!clavesCorrecto) {
+            JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                    "Asegúrate de colocar la IP de la autoridad y el nombre "
+                    + "de usuario con el que deseas registrarte",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                clienteEmisor = new Cliente(jtfNombreUsuario.getText());
+                clienteEmisor.solicitarLLaves();
+                jtfClavePrivada.setText(clienteEmisor.getPrivateKey() == null
+                        ? "No asignada" : "Asignada");
+                jtfClavePublica.setText(clienteEmisor.getPublicKey() == null
+                        ? "No asignada" : "Asignada");
+                clavesCorrecto = clienteEmisor.getPrivateKey() != null
+                        && clienteEmisor.getPublicKey() != null;
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(EmisorArchivoForm.this,
+                        "Error en la solicitud de llaves a la autoridad "
+                        + "certificadora",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnSolicitarClaveActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        jtfIPCliente.setText(DetectorIP.detectarIP());
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -244,34 +318,38 @@ public class EmisorArchivoForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnElegirArchivo;
     private javax.swing.JButton btnSolicitarClave;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JTextField jtfClavePrivada;
     private javax.swing.JTextField jtfClavePublica;
-    private javax.swing.JTextField jtfEstatusCliente;
     private javax.swing.JTextField jtfIPCliente;
+    private javax.swing.JTextField jtfIPServidor;
     private javax.swing.JTextField jtfIpAutoridad;
     private javax.swing.JTextField jtfNombreUsuario;
     private javax.swing.JLabel lblTituloEmisor;
     // End of variables declaration//GEN-END:variables
 
+    private Cliente clienteEmisor;
+    private boolean clavesCorrecto;
+
     private void configure() {
         setLocationRelativeTo(null);
-//        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setResizable(false);
+        jtfIpAutoridad.setText(DetectorIP.detectarIP());
+        jtfNombreUsuario.setText("usuario");
+        jtfIPServidor.setText(DetectorIP.detectarIP());
     }
 }

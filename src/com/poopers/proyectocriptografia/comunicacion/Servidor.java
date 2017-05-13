@@ -18,19 +18,24 @@ import javax.xml.bind.DatatypeConverter;
 public class Servidor {
 
     private final int PUERTO_AUTORIDAD = 4321;
-    private final String HOST_AUTORIDAD = "localhost";
+    private final String HOST_AUTORIDAD;
     private final int PUERTO_AS_SERVER = 9876;
     private List<Integer> idsArchivos;
     private List<List<String>> bloquesArchivos;
     private CifradoRsa cifradoRsa;
     private ServerSocket serverSocket;
-
-    public Servidor() throws IOException {
+    
+    public Servidor(String hostAutoridad) throws IOException {
         idsArchivos = new ArrayList<>();
         bloquesArchivos = new ArrayList<>();
         cifradoRsa = new CifradoRsa();
         // El socket se abre aquí para que siempre acepte mensajes
         serverSocket = new ServerSocket(PUERTO_AS_SERVER);
+        HOST_AUTORIDAD = hostAutoridad;
+    }
+
+    public Servidor() throws IOException {
+        this("localhost");
     }
 
     public void receiveMessage() throws IOException {
@@ -74,16 +79,16 @@ public class Servidor {
 
     private void procesarMensaje(PrintStream output, String message)
             throws IOException {
-        System.out.println("Servidor.procesarMensaje");
+//        System.out.println("Servidor.procesarMensaje");
         String[] partes = message.split(" ");
         output.flush();
         if (message.equals("NUEVO_ARCHIVO")) {
-            System.out.println(">> Procesar NUEVO_ARCHIVO");
+//            System.out.println(">> Procesar NUEVO_ARCHIVO");
             idsArchivos.add(idsArchivos.size());
             bloquesArchivos.add(new ArrayList<>());
             output.println(idsArchivos.get(idsArchivos.size() - 1));
         } else if (message.startsWith("ARCHIVO_TERMINADO")) {
-            System.out.println(">> Procesar ARCHIVO_TERMINADO");
+//            System.out.println(">> Procesar ARCHIVO_TERMINADO");
             // Se obtiene una lista con las entidades certificadas
             String response = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,
                     "OBTENER_ENTIDADES_CERTIFICADAS", 1).get(0);
@@ -92,7 +97,7 @@ public class Servidor {
             List<EntidadCertificada> entidades
                     = (List<EntidadCertificada>) SerializacionObjetos
                     .deserialize("generated_files/entidadesCertificadasReceived");
-            System.out.println(entidades);
+//            System.out.println(entidades);
             output.println("Se recibieron todos los bloques");
             // Se desencriptarán los bloques y se verificará cuál llave lo hace
             // correctamente
@@ -124,7 +129,7 @@ public class Servidor {
                 }
             }
         } else if (message.startsWith("BLOQUE_ARCHIVO")) {
-            System.out.println(">> Procesar BLOQUE_ARCHIVO");
+//            System.out.println(">> Procesar BLOQUE_ARCHIVO");
             int idArchivo = Integer.parseInt(partes[1]);
             bloquesArchivos.get(idArchivo).add(partes[2]);
             output.println("Bloque recibido");

@@ -52,10 +52,10 @@ public class AutoridadCertificadora {
     }
 
     private void procesarMensaje(PrintStream output, String mensaje) {
-        System.out.println("AutoridadCertificadora.procesarMensaje");
+//        System.out.println("AutoridadCertificadora.procesarMensaje");
         String[] partes = mensaje.split(" ");
         if (mensaje.startsWith("GENERAR_LLAVES")) {
-            System.out.println(">> Procesar GENERAR_LLAVES");
+//            System.out.println(">> Procesar GENERAR_LLAVES");
             String privateFilename = "generated_files/privateSent_" + partes[1];
             String publicFilename = "generated_files/publicSent_" + partes[1];
             KeyPair keyPair = generarClaves(partes[1]);

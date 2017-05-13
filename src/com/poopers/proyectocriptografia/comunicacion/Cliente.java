@@ -73,7 +73,7 @@ public class Cliente {
     }
 
     public void sendFile(String filename) throws IOException {
-        System.out.println("Cliente(" + usuario + ").sendFile");
+//        System.out.println("Cliente(" + usuario + ").sendFile");
         if (publicKey == null) {
             System.err.println("No tiene llaves");
             return;
@@ -109,16 +109,15 @@ public class Cliente {
                     String cifrado = DatatypeConverter.printHexBinary(
                             cifradoRsa.encrypt(bloque, privateKey));
                     sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "BLOQUE_ARCHIVO "
-                            + idArchivo + " " + cifrado,
-                            1);
+                            + idArchivo + " " + cifrado, 1);
                     error = false;
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
             }
-            System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
+//            System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
         }
-        System.out.println("Original de " + encodedFile.length() + " bytes");
+//        System.out.println("Original de " + encodedFile.length() + " bytes");
         error = true;
         while (error) {
             try {
@@ -133,7 +132,7 @@ public class Cliente {
     }
 
     public void solicitarLLaves() throws IOException {
-        System.out.println("Cliente(" + usuario + ").solicitarLLaves");
+//        System.out.println("Cliente(" + usuario + ").solicitarLLaves");
         String privateFilename = "privateReceived_" + usuario;
         String publicFilename = "publicReceived_" + usuario;
         List<String> respuestas = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,
