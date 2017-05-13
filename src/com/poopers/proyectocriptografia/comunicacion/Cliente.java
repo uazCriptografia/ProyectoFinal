@@ -54,7 +54,8 @@ public class Cliente {
                 try {
                     respuestas.add(input.readLine());
                     error = false;
-                } catch(Exception e) {
+                } catch(Exception ex) {
+                    System.out.println(ex);
                 }
             }
             
@@ -77,8 +78,15 @@ public class Cliente {
             System.err.println("No tiene llaves");
             return;
         }
-        String idArchivo = sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR,
+        String idArchivo = null;
+        boolean error = true;
+        while(error) {
+            try {
+                idArchivo = sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR,
                 "NUEVO_ARCHIVO", 1).get(0);
+                error = false;
+            } catch(Exception ex) {}
+        }
         String encodedFile = CodificadorArchivo.encodeFile(filename);
         int inicio = 0;
         int fin = 117;
@@ -95,7 +103,7 @@ public class Cliente {
                     encodedFile.length() - restantes, encodedFile.length()));
         }
         for (String bloque : bloques) {
-            boolean error = true;
+            error = true;
             while (error) {
                 try {
                     String cifrado = DatatypeConverter.printHexBinary(
@@ -105,13 +113,13 @@ public class Cliente {
                             1);
                     error = false;
                 } catch (Exception ex) {
-
+                    System.out.println(ex);
                 }
             }
             System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
         }
         System.out.println("Original de " + encodedFile.length() + " bytes");
-        boolean error = true;
+        error = true;
         while (error) {
             try {
                 sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "ARCHIVO_TERMINADO "

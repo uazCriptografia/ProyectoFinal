@@ -23,16 +23,17 @@ public class Servidor {
     private List<Integer> idsArchivos;
     private List<List<String>> bloquesArchivos;
     private CifradoRsa cifradoRsa;
+    private ServerSocket serverSocket;
 
-    public Servidor() {
+    public Servidor() throws IOException {
         idsArchivos = new ArrayList<>();
         bloquesArchivos = new ArrayList<>();
         cifradoRsa = new CifradoRsa();
+        // El socket se abre aquí para que siempre acepte mensajes
+        serverSocket = new ServerSocket(PUERTO_AS_SERVER);
     }
 
     public void receiveMessage() throws IOException {
-        // Socket de servidor para recibir mensajes
-        ServerSocket serverSocket = new ServerSocket(PUERTO_AS_SERVER);
         // Socket del cliente que se conecta al servidor
         Socket sourceSocket = serverSocket.accept();
         // Reader para leer los mensajes del cliente
@@ -46,8 +47,6 @@ public class Servidor {
         procesarMensaje(output, message);
         // Cierra el cliente
         sourceSocket.close();
-        // Cierra el servidor
-        serverSocket.close();
     }
 
     private List<String> sendMessage(String host, int puerto, String message,
