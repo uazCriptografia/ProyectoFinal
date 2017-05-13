@@ -85,14 +85,6 @@ public class AutoridadCertificadora {
         return null;
     }
 
-    /**
-     * Genera las claves pública y privada para una nueva entidad.
-     *
-     * @param nombreEntidad Es el nombre de la entidad a certificar.
-     * @return Las claves en una sola cadena separadas por una coma, por
-     * ejemplo: "123321312,312321321" el primer número es la clave pública y el
-     * segundo es la privada.
-     */
     public KeyPair generarClaves(String nombreEntidad) {
         if (buscarEntidad(nombreEntidad) == null) {
             KeyPair keyPair = new CifradoRsa().generateKey();
