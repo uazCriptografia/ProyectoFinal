@@ -1,5 +1,8 @@
-package com.poopers.proyectocriptografia.logica;
+package com.poopers.proyectocriptografia.comunicacion;
 
+import com.poopers.proyectocriptografia.fileutils.CodificadorArchivo;
+import com.poopers.proyectocriptografia.fileutils.SerializacionObjetos;
+import com.poopers.proyectocriptografia.cifrado.CifradoRsa;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,8 +45,9 @@ public class AutoridadCertificadora {
         String message = clientInput.readLine();
         // Se manda procesar el mensaje
         procesarMensaje(output, message);
-        // Cierra la conexión
+        // Cierra el cliente
         sourceSocket.close();
+        // Cierra el servidor
         serverSocket.close();
     }
 
@@ -52,23 +56,23 @@ public class AutoridadCertificadora {
         String[] partes = mensaje.split(" ");
         if (mensaje.startsWith("GENERAR_LLAVES")) {
             System.out.println(">> Procesar GENERAR_LLAVES");
-            String privateFilename = "privateSent_" + partes[1];
-            String publicFilename = "publicSent_" + partes[1];
+            String privateFilename = "generated_files/privateSent_" + partes[1];
+            String publicFilename = "generated_files/publicSent_" + partes[1];
             KeyPair keyPair = generarClaves(partes[1]);
             output.flush();
             if (keyPair == null) {
                 output.println("ERROR");
             } else {
-                Serializacion.serialize(keyPair.getPublic(), publicFilename);
-                Serializacion.serialize(keyPair.getPrivate(), privateFilename);
-                output.println(FileUtils.encodeFile(publicFilename));
-                output.println(FileUtils.encodeFile(privateFilename));
+                SerializacionObjetos.serialize(keyPair.getPublic(), publicFilename);
+                SerializacionObjetos.serialize(keyPair.getPrivate(), privateFilename);
+                output.println(CodificadorArchivo.encodeFile(publicFilename));
+                output.println(CodificadorArchivo.encodeFile(privateFilename));
             }
         } else if (mensaje.startsWith("OBTENER_ENTIDADES_CERTIFICADAS")) {
-            Serializacion.serialize(entidadesCertificadas,
-                    "entidadesCertificadas");
+            SerializacionObjetos.serialize(entidadesCertificadas,
+                    "generated_files/entidadesCertificadas");
             output.flush();
-            output.println(FileUtils.encodeFile("entidadesCertificadas"));
+            output.println(CodificadorArchivo.encodeFile("generated_files/entidadesCertificadas"));
         }
     }
 

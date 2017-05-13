@@ -1,5 +1,9 @@
-package com.poopers.proyectocriptografia.logica;
+package com.poopers.proyectocriptografia.comunicacion;
 
+import com.poopers.proyectocriptografia.fileutils.CodificadorArchivo;
+import com.poopers.proyectocriptografia.fileutils.GestorArchivo;
+import com.poopers.proyectocriptografia.fileutils.SerializacionObjetos;
+import com.poopers.proyectocriptografia.cifrado.CifradoRsa;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +15,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.xml.bind.DatatypeConverter;
 
 public class Cliente {
 
@@ -44,7 +49,15 @@ public class Cliente {
         // Se leen todas las respuestas del servidor
         for (int i = 0; i < expectedResponses; i++) {
             // Agrega la respuesta actual a la lista
-            respuestas.add(input.readLine());
+            boolean error = true;
+            while(error) {
+                try {
+                    respuestas.add(input.readLine());
+                    error = false;
+                } catch(Exception e) {
+                }
+            }
+            
             // Imprime la respuesta actual
 //            System.out.println(respuestas.get(i));
             // Verifica si la respuesta es de error, para dejar de recibirlas
@@ -66,7 +79,7 @@ public class Cliente {
         }
         String idArchivo = sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR,
                 "NUEVO_ARCHIVO", 1).get(0);
-        String encodedFile = FileUtils.encodeFile(filename);
+        String encodedFile = CodificadorArchivo.encodeFile(filename);
         int inicio = 0;
         int fin = 117;
         int countBloques = 0;
@@ -85,18 +98,19 @@ public class Cliente {
             boolean error = true;
             while (error) {
                 try {
+                    String cifrado = DatatypeConverter.printHexBinary(
+                            cifradoRsa.encrypt(bloque, privateKey));
                     sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR, "BLOQUE_ARCHIVO "
-                            + idArchivo + " " + cifradoRsa.encrypt(bloque, privateKey),
+                            + idArchivo + " " + cifrado,
                             1);
                     error = false;
                 } catch (Exception ex) {
 
                 }
             }
-
             System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
         }
-
+        System.out.println("Original de " + encodedFile.length() + " bytes");
         boolean error = true;
         while (error) {
             try {
@@ -117,12 +131,12 @@ public class Cliente {
         List<String> respuestas = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,
                 "GENERAR_LLAVES " + usuario, 2);
         if (!respuestas.get(0).equals("ERROR")) {
-            byte[] decodedPublic = FileUtils.decodeFile(respuestas.get(0));
-            byte[] decodedPrivate = FileUtils.decodeFile(respuestas.get(1));
-            FileUtils.writeFile(decodedPublic, publicFilename);
-            FileUtils.writeFile(decodedPrivate, privateFilename);
-            publicKey = (PublicKey) Serializacion.deserialize(publicFilename);
-            privateKey = (PrivateKey) Serializacion.deserialize(privateFilename);
+            byte[] decodedPublic = CodificadorArchivo.decodeFile(respuestas.get(0));
+            byte[] decodedPrivate = CodificadorArchivo.decodeFile(respuestas.get(1));
+            GestorArchivo.writeBytes(decodedPublic, "generated_files/" + publicFilename);
+            GestorArchivo.writeBytes(decodedPrivate, "generated_files/" + privateFilename);
+            publicKey = (PublicKey) SerializacionObjetos.deserialize("generated_files/" + publicFilename);
+            privateKey = (PrivateKey) SerializacionObjetos.deserialize("generated_files/" + privateFilename);
         }
     }
 
@@ -140,7 +154,8 @@ public class Cliente {
             System.out.println("Inserta el nombre del cliente");
             Cliente cliente = new Cliente(scanner.nextLine());
             cliente.solicitarLLaves();
-            cliente.sendFile("texto.txt");
+            System.out.println("Inserta el nombre del archivo");
+            cliente.sendFile(scanner.nextLine());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

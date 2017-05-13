@@ -1,4 +1,4 @@
-package com.poopers.proyectocriptografia.logica;
+package com.poopers.proyectocriptografia.fileutils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class Serializacion {
+public class SerializacionObjetos {
     /**
      * deserialize to Object from given file. We use the general Object so as
      * that it can work for any Java Class.

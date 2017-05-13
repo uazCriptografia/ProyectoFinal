@@ -1,6 +1,10 @@
-package com.poopers.proyectocriptografia.logica;
+package com.poopers.proyectocriptografia.comunicacion;
 
-import com.poopers.proyectocriptografia.fileutils.VerificadorIntegridad;
+import com.poopers.proyectocriptografia.fileutils.CodificadorArchivo;
+import com.poopers.proyectocriptografia.fileutils.GestorArchivo;
+import com.poopers.proyectocriptografia.fileutils.SerializacionObjetos;
+import com.poopers.proyectocriptografia.fileutils.VerificadorArchivo;
+import com.poopers.proyectocriptografia.cifrado.CifradoRsa;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.DatatypeConverter;
 
 public class Servidor {
 
@@ -83,11 +88,11 @@ public class Servidor {
             // Se obtiene una lista con las entidades certificadas
             String response = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,
                     "OBTENER_ENTIDADES_CERTIFICADAS", 1).get(0);
-            byte[] decodedFile = FileUtils.decodeFile(response);
-            FileUtils.writeFile(decodedFile, "entidadesCertificadasReceived");
+            byte[] decodedFile = CodificadorArchivo.decodeFile(response);
+            GestorArchivo.writeBytes(decodedFile, "generated_files/entidadesCertificadasReceived");
             List<EntidadCertificada> entidades
-                    = (List<EntidadCertificada>) Serializacion
-                    .deserialize("entidadesCertificadasReceived");
+                    = (List<EntidadCertificada>) SerializacionObjetos
+                    .deserialize("generated_files/entidadesCertificadasReceived");
             System.out.println(entidades);
             output.println("Se recibieron todos los bloques");
             // Se desencriptarán los bloques y se verificará cuál llave lo hace
@@ -98,24 +103,19 @@ public class Servidor {
                 bloquesDesencriptados.clear();
                 for (String bloque : bloquesArchivos.get(idArchivo)) {
                     try {
-                        bloquesDesencriptados.add(cifradoRsa
-                                .decrypt(bloque.getBytes(),
-                                        entidad.getLlavePublica()));
+                        String descifrado = cifradoRsa.decrypt(
+                                DatatypeConverter.parseHexBinary(bloque),
+                                entidad.getLlavePublica());
+                        bloquesDesencriptados.add(descifrado);
                     } catch (Exception ex) {
-                        System.out.println("Error con " + entidad.getNombre()
-                                + ": " + ex);
-                        System.out.println("Bloque: " + bloque);
-                        ex.printStackTrace();
                         break;
                     }
                 }
                 String decryptedFile = String.join("", bloquesDesencriptados);
-                String filename = "Decrypted_" + entidad.getNombre();
-                FileUtils.writeFile(decryptedFile.getBytes(), filename);
-                System.out.println("Decrypted de " + decryptedFile.length());
-                System.out.println("Bloques de " + bloquesDesencriptados.size());
+                String filename = "generated_files/Decrypted_" + entidad.getNombre();
+                GestorArchivo.writeBytes(CodificadorArchivo.decodeFile(decryptedFile), filename);
                 if (bloquesDesencriptados.size() > 0
-                        && VerificadorIntegridad.verificar(filename)) {
+                        && VerificadorArchivo.verificar(filename)) {
                     System.out.println("La entidad " + entidad.getNombre()
                             + " es la chida");
                     break;

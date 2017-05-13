@@ -1,4 +1,4 @@
-package com.poopers.proyectocriptografia.logica;
+package com.poopers.proyectocriptografia.comunicacion;
 
 import java.io.Serializable;
 import java.security.PublicKey;

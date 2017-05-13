@@ -4,7 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
-public class VerificadorIntegridad {
+public class VerificadorArchivo {
 
     public static boolean verificar(String filename) {
         try {
