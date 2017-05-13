@@ -20,17 +20,19 @@ import javax.xml.bind.DatatypeConverter;
 public class Cliente {
 
     private final int PUERTO_AUTORIDAD = 4321;
-    private final String HOST_AUTORIDAD = "localhost";
+    private final String HOST_AUTORIDAD;
     private final int PUERTO_SERVIDOR = 9876;
-    private final String HOST_SERVIDOR = "localhost";
+    private final String HOST_SERVIDOR;
     private String usuario;
     private PublicKey publicKey;
     private PrivateKey privateKey;
     private CifradoRsa cifradoRsa;
 
-    public Cliente(String usuario) {
+    public Cliente(String usuario, String hostAutoridad, String hostServidor) {
         this.usuario = usuario;
         cifradoRsa = new CifradoRsa();
+        HOST_AUTORIDAD = hostAutoridad;
+        HOST_SERVIDOR = hostServidor;
     }
 
     private List<String> sendMessage(String host, int puerto, String message,
@@ -50,17 +52,14 @@ public class Cliente {
         for (int i = 0; i < expectedResponses; i++) {
             // Agrega la respuesta actual a la lista
             boolean error = true;
-            while(error) {
+            while (error) {
                 try {
                     respuestas.add(input.readLine());
                     error = false;
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     System.out.println(ex);
                 }
             }
-            
-            // Imprime la respuesta actual
-//            System.out.println(respuestas.get(i));
             // Verifica si la respuesta es de error, para dejar de recibirlas
             if (respuestas.get(i).equals("ERROR")) {
                 break;
@@ -73,19 +72,20 @@ public class Cliente {
     }
 
     public void sendFile(String filename) throws IOException {
-//        System.out.println("Cliente(" + usuario + ").sendFile");
+        System.out.println("Cliente> Enviará archivo " + filename);
         if (publicKey == null) {
             System.err.println("No tiene llaves");
             return;
         }
         String idArchivo = null;
         boolean error = true;
-        while(error) {
+        while (error) {
             try {
                 idArchivo = sendMessage(HOST_SERVIDOR, PUERTO_SERVIDOR,
-                "NUEVO_ARCHIVO", 1).get(0);
+                        "NUEVO_ARCHIVO", 1).get(0);
                 error = false;
-            } catch(Exception ex) {}
+            } catch (Exception ex) {
+            }
         }
         String encodedFile = CodificadorArchivo.encodeFile(filename);
         int inicio = 0;
@@ -159,7 +159,8 @@ public class Cliente {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Inserta el nombre del cliente");
-            Cliente cliente = new Cliente(scanner.nextLine());
+            Cliente cliente = new Cliente(scanner.nextLine(), "localhost",
+                    "localhost");
             cliente.solicitarLLaves();
             System.out.println("Inserta el nombre del archivo");
             cliente.sendFile(scanner.nextLine());

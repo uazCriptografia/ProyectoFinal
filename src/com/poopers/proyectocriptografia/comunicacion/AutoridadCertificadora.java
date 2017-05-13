@@ -52,10 +52,9 @@ public class AutoridadCertificadora {
     }
 
     private void procesarMensaje(PrintStream output, String mensaje) {
-//        System.out.println("AutoridadCertificadora.procesarMensaje");
         String[] partes = mensaje.split(" ");
         if (mensaje.startsWith("GENERAR_LLAVES")) {
-//            System.out.println(">> Procesar GENERAR_LLAVES");
+            System.out.println("Autoridad> Generar llaves");
             String privateFilename = "generated_files/privateSent_" + partes[1];
             String publicFilename = "generated_files/publicSent_" + partes[1];
             KeyPair keyPair = generarClaves(partes[1]);
@@ -69,6 +68,7 @@ public class AutoridadCertificadora {
                 output.println(CodificadorArchivo.encodeFile(privateFilename));
             }
         } else if (mensaje.startsWith("OBTENER_ENTIDADES_CERTIFICADAS")) {
+            System.out.println("Autoridad> Obtener entidades registradas");
             SerializacionObjetos.serialize(entidadesCertificadas,
                     "generated_files/entidadesCertificadas");
             output.flush();

@@ -3,6 +3,7 @@ package com.poopers.proyectocriptografia;
 import com.poopers.proyectocriptografia.comunicacion.AutoridadCertificadora;
 import com.poopers.proyectocriptografia.comunicacion.Servidor;
 import com.poopers.proyectocriptografia.pantallas.EmisorArchivoForm;
+import com.poopers.proyectocriptografia.pantallas.ReceptorArchivoForm;
 
 public class Main {
 
@@ -19,13 +20,13 @@ public class Main {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Servidor.main(args);
+                EmisorArchivoForm.main(args);
             }
         }).start();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                EmisorArchivoForm.main(args);
+                ReceptorArchivoForm.main(args);
             }
         }).start();
     }
