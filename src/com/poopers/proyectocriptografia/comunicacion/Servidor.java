@@ -133,6 +133,9 @@ public class Servidor {
             int idArchivo = Integer.parseInt(partes[1]);
             bloquesArchivos.get(idArchivo).add(partes[2]);
             output.println("Bloque recibido");
+            if (progressListener != null) {
+                progressListener.onUploadProgress(idArchivo, bloquesArchivos.get(idArchivo).size());
+            }
         }
     }
 
@@ -160,7 +163,7 @@ public class Servidor {
 
     public interface UploadProgressListener {
 
-        void onUploadProgress(int idArchivo, int porcentaje);
+        void onUploadProgress(int idArchivo, int bloques);
     }
 
     public static void main(String[] args) {

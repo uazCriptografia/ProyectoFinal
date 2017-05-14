@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class ReceptorArchivoForm extends javax.swing.JFrame {
 
@@ -46,7 +48,14 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jlstArchivosRecibidos = new javax.swing.JList<>();
-        jPanel8 = new javax.swing.JPanel();
+        jpanelDetallesArchivo = new javax.swing.JPanel();
+        jpanelContentDetalles = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jtfEstadoArchivo = new javax.swing.JTextField();
+        jtfIdArchivo = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jtfRemitenteArchivo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(900, 500));
@@ -135,20 +144,73 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
 
         jPanel7.add(jScrollPane1);
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalles"));
+        jpanelDetallesArchivo.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalles"));
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 422, Short.MAX_VALUE)
+        jLabel1.setText("Id del archivo: ");
+
+        jtfEstadoArchivo.setEditable(false);
+
+        jtfIdArchivo.setEditable(false);
+
+        jLabel3.setText("Estado:");
+
+        jLabel4.setText("Remitente:");
+
+        jtfRemitenteArchivo.setEditable(false);
+
+        javax.swing.GroupLayout jpanelContentDetallesLayout = new javax.swing.GroupLayout(jpanelContentDetalles);
+        jpanelContentDetalles.setLayout(jpanelContentDetallesLayout);
+        jpanelContentDetallesLayout.setHorizontalGroup(
+            jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelContentDetallesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtfIdArchivo, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .addComponent(jtfEstadoArchivo)
+                    .addComponent(jtfRemitenteArchivo))
+                .addContainerGap())
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 191, Short.MAX_VALUE)
+        jpanelContentDetallesLayout.setVerticalGroup(
+            jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelContentDetallesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jtfIdArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfEstadoArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpanelContentDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfRemitenteArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
-        jPanel7.add(jPanel8);
+        javax.swing.GroupLayout jpanelDetallesArchivoLayout = new javax.swing.GroupLayout(jpanelDetallesArchivo);
+        jpanelDetallesArchivo.setLayout(jpanelDetallesArchivoLayout);
+        jpanelDetallesArchivoLayout.setHorizontalGroup(
+            jpanelDetallesArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelDetallesArchivoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpanelContentDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jpanelDetallesArchivoLayout.setVerticalGroup(
+            jpanelDetallesArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpanelDetallesArchivoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpanelContentDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel7.add(jpanelDetallesArchivo);
 
         jPanel6.add(jPanel7, java.awt.BorderLayout.CENTER);
 
@@ -171,53 +233,56 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
                     "Asegúrate de colocar la IP de la autoridad certificadora",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        servidor = new Servidor(jtfIPAutoridad.getText());
-                        servidor.setUploadStartedListener(new Servidor.UploadStartedListener() {
-                            @Override
-                            public void onUploadStart(int idArchivo) {
-                                ArchivoRecibido nuevo = new ArchivoRecibido(idArchivo);
-                                modeloArchivos.addElement(nuevo);
-                            }
-                        });
-                        servidor.setUploadProgressListener(new Servidor.UploadProgressListener() {
-                            @Override
-                            public void onUploadProgress(int idArchivo, int porcentaje) {
-                                for (int i = 0; i < modeloArchivos.size(); i++) {
-                                    ArchivoRecibido actual = modeloArchivos.getElementAt(i);
-                                    if (actual.getIdArchivo() == idArchivo) {
-                                        actual.setPorcentajeSubida(porcentaje);
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                        servidor.setUploadFinishedListener(new Servidor.UploadFinishedListener() {
-                            @Override
-                            public void onUploadFinish(int idArchivo, String entidadEmisora) {
-                                for (int i = 0; i < modeloArchivos.size(); i++) {
-                                    ArchivoRecibido actual = modeloArchivos.getElementAt(i);
-                                    if (actual.getIdArchivo() == idArchivo) {
-                                        actual.setPorcentajeSubida(100);
-                                        actual.setEntidadEmisora(entidadEmisora);
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                        while (true) {
-                            servidor.receiveMessage();
-                        }
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(ReceptorArchivoForm.this,
-                                ex, "Error", JOptionPane.ERROR_MESSAGE);
+            try {
+                servidor = new Servidor(jtfIPAutoridad.getText());
+                servidor.setUploadStartedListener(new Servidor.UploadStartedListener() {
+                    @Override
+                    public void onUploadStart(int idArchivo) {
+                        ArchivoRecibido nuevo = new ArchivoRecibido(idArchivo);
+                        modeloArchivos.addElement(nuevo);
                     }
-                }
-            }).start();
-            btnComenzar.setEnabled(false);
+                });
+                servidor.setUploadProgressListener(new Servidor.UploadProgressListener() {
+                    @Override
+                    public void onUploadProgress(int idArchivo, int bloques) {
+                        for (int i = 0; i < modeloArchivos.size(); i++) {
+                            ArchivoRecibido actual = modeloArchivos.getElementAt(i);
+                            if (actual.getIdArchivo() == idArchivo) {
+                                actual.setBloquesRecibidos(bloques);
+                                break;
+                            }
+                        }
+                    }
+                });
+                servidor.setUploadFinishedListener(new Servidor.UploadFinishedListener() {
+                    @Override
+                    public void onUploadFinish(int idArchivo, String entidadEmisora) {
+                        for (int i = 0; i < modeloArchivos.size(); i++) {
+                            ArchivoRecibido actual = modeloArchivos.getElementAt(i);
+                            if (actual.getIdArchivo() == idArchivo) {
+                                actual.setEntidadEmisora(entidadEmisora);
+                                break;
+                            }
+                        }
+                    }
+                });
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            while (true) {
+                                servidor.receiveMessage();
+                            }
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(ReceptorArchivoForm.this,
+                                    ex, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }).start();
+                btnComenzar.setEnabled(false);
+            } catch (IOException ex) {
+                Logger.getLogger(ReceptorArchivoForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnComenzarActionPerformed
 
@@ -258,7 +323,10 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnComenzar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -268,55 +336,87 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<ArchivoRecibido> jlstArchivosRecibidos;
+    private javax.swing.JPanel jpanelContentDetalles;
+    private javax.swing.JPanel jpanelDetallesArchivo;
+    private javax.swing.JTextField jtfEstadoArchivo;
     private javax.swing.JTextField jtfIPAutoridad;
     private javax.swing.JTextField jtfIPServidor;
+    private javax.swing.JTextField jtfIdArchivo;
+    private javax.swing.JTextField jtfRemitenteArchivo;
     private javax.swing.JLabel lblTituloEmisor;
     // End of variables declaration//GEN-END:variables
 
     private Servidor servidor;
     private DefaultListModel<ArchivoRecibido> modeloArchivos;
-    
+
     private void configure() {
         setLocationRelativeTo(null);
         setResizable(false);
         modeloArchivos = new DefaultListModel<>();
         jlstArchivosRecibidos.setModel(modeloArchivos);
         jtfIPAutoridad.setText(DetectorIP.detectarIP());
+        addJlstArchivosRecibidosListSelectionListener();
+        jpanelContentDetalles.setVisible(false);
     }
-    
+
+    private void addJlstArchivosRecibidosListSelectionListener() {
+        jlstArchivosRecibidos.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    ArchivoRecibido archivo = jlstArchivosRecibidos.getSelectedValue();
+                    if (archivo == null) {
+                        jpanelContentDetalles.setVisible(false);
+                    } else {
+                        jpanelContentDetalles.setVisible(true);
+                        jtfIdArchivo.setText(archivo.getIdArchivo() + "");
+                        jtfEstadoArchivo.setText("Se recibieron "
+                                + archivo.getBloquesRecibidos() + " bloques");
+                        String entidad = null;
+                        if(archivo.getEntidadEmisora() == null) {
+                            entidad = "Aún no se determina";
+                        } else {
+                            entidad = archivo.getEntidadEmisora();
+                        }
+                        jtfRemitenteArchivo.setText(entidad);
+                    }
+                }
+            }
+        });
+    }
+
     private class ArchivoRecibido {
-        
+
         private int idArchivo;
-        private int porcentajeSubida;
+        private int bloquesRecibidos;
         private String entidadEmisora;
-        
+
         public ArchivoRecibido(int idArchivo) {
             this.idArchivo = idArchivo;
         }
-        
+
         public int getIdArchivo() {
             return idArchivo;
         }
-        
-        public int getPorcentajeSubida() {
-            return porcentajeSubida;
+
+        public int getBloquesRecibidos() {
+            return bloquesRecibidos;
         }
-        
-        public void setPorcentajeSubida(int porcentajeSubida) {
-            this.porcentajeSubida = porcentajeSubida;
+
+        public void setBloquesRecibidos(int bloquesRecibidos) {
+            this.bloquesRecibidos = bloquesRecibidos;
         }
-        
+
         public String getEntidadEmisora() {
             return entidadEmisora;
         }
-        
+
         public void setEntidadEmisora(String entidadEmisora) {
             this.entidadEmisora = entidadEmisora;
         }
-        
+
         @Override
         public String toString() {
             return "Archivo " + idArchivo;
