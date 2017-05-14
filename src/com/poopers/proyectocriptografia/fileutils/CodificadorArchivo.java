@@ -6,7 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
 
+/**
+ * Utilidad para codificar y decodificar archivos como Strings.
+ */
 public class CodificadorArchivo {
+
     public static String encodeFile(String filename) {
         byte[] fileBytes = readBytes(filename);
         return Base64.getEncoder().encodeToString(fileBytes);

@@ -5,7 +5,6 @@ import com.poopers.proyectocriptografia.fileutils.GestorArchivo;
 import com.poopers.proyectocriptografia.fileutils.SerializacionObjetos;
 import com.poopers.proyectocriptografia.cifrado.CifradoRsa;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -17,6 +16,13 @@ import java.util.List;
 import java.util.Scanner;
 import javax.xml.bind.DatatypeConverter;
 
+/**
+ * Esta entidad tiene la responsabilidad de enviar mensajes al servidor, los
+ * cuales deben estar cifrados, por lo que antes se solicita a la entidad
+ * certificadora un par de llaves para realizar este proceso, además, pueden
+ * haber varias instancias de clientes que simultáneamente envien archivos al
+ * servidor.
+ */
 public class Cliente {
 
     private final int PUERTO_AUTORIDAD = 4321;
@@ -115,9 +121,7 @@ public class Cliente {
                     System.out.println(ex);
                 }
             }
-//            System.out.println(countBloques++ + " bloques de " + encodedFile.length() / 117);
         }
-//        System.out.println("Original de " + encodedFile.length() + " bytes");
         error = true;
         while (error) {
             try {
@@ -128,11 +132,9 @@ public class Cliente {
 
             }
         }
-
     }
 
     public void solicitarLLaves() throws IOException {
-//        System.out.println("Cliente(" + usuario + ").solicitarLLaves");
         String privateFilename = "privateReceived_" + usuario;
         String publicFilename = "publicReceived_" + usuario;
         List<String> respuestas = sendMessage(HOST_AUTORIDAD, PUERTO_AUTORIDAD,

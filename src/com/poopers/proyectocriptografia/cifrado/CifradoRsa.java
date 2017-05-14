@@ -1,45 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.poopers.proyectocriptografia.cifrado;
 
 import com.poopers.proyectocriptografia.fileutils.CodificadorArchivo;
 import com.poopers.proyectocriptografia.fileutils.GestorArchivo;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.xml.bind.DatatypeConverter;
 
 /**
- *
- * @author porfirio
+ * Esta clase se encarga del cifrado y descifrado de texto por medio del
+ * algoritmo RSA.
  */
 public class CifradoRsa {
 
     /**
-     * Genera el KeyPair que contiene las llaves pública y privada usando 1024
-     * bytes.
+     * Genera el par de llaves pública y privada para que una entidad pueda
+     * cifrar y descifrar.
      *
-     * @return El objeto KeyPair con las llaves pública y privada.
+     * @return Instancia de KeyPair que contiene las llaves.
      */
     public KeyPair generateKey() {
         try {
@@ -55,11 +40,12 @@ public class CifradoRsa {
     }
 
     /**
-     * Cifra el texto en claro..
+     * Realiza el cifrado con el texto y llave dados.
      *
-     * @param text Es el texto en claro a cifrar.
-     * @param key Es la llave con la que se cifrará.
-     * @return Arreglo de bytes con el texto cifrado.
+     * @param text El texto que se cifrará (no más de 117 bytes).
+     * @param key La llave con la que se cifrará (si es la pública el descifrado
+     * se deberá hacer con la privada, y viceversa).
+     * @return Arreglo de bytes que representan el resultado del cifrado.
      */
     public byte[] encrypt(String text, Key key) {
         byte[] cipherText = null;
@@ -70,17 +56,17 @@ public class CifradoRsa {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             cipherText = cipher.doFinal(text.getBytes());
         } catch (Exception e) {
-//            e.printStackTrace();
         }
         return cipherText;
     }
 
     /**
-     * Descifra el texto cifrado.
+     * Realiza el descifrado con el arreglo de bytes y la llave dados.
      *
-     * @param text Es el texto cifrado a descifrar.
-     * @param key Es la llave con la que se descifrará.
-     * @return Cadena con el resultado del descifrado.
+     * @param text Es el texto a descifrar.
+     * @param key Es la llave con la que se descifrará (Si se cifró con la
+     * pública, deberá pasarse la privada y viceversa).
+     * @return String que representa el resultado del descifrado.
      */
     public String decrypt(byte[] text, Key key) {
         byte[] dectyptedText = null;
@@ -97,7 +83,9 @@ public class CifradoRsa {
     }
 
     /**
-     * Test the EncryptionUtil
+     * Ejecuta las pruebas para esta utilidad.
+     *
+     * @param args
      */
     public static void main(String[] args) {
         try {
@@ -105,59 +93,13 @@ public class CifradoRsa {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CifradoRsa.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        CifradoRsa cifradoRsa = new CifradoRsa();
-//        cifradoRsa.generateKey();
-//        KeyPair keyPair = cifradoRsa.generateKey();
-//        String originalText = "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública"
-//                + "Texto que se cifrará con clave pública";
-////        byte[] cipherText = cifradoRsa.encrypt(originalText,
-////                keyPair.getPublic());
-////        String plainText = cifradoRsa.decrypt(cipherText,
-////                keyPair.getPrivate());
-//
-//        String cipherText = null;
-//         String plainText = null;
-//        try {
-//            cipherText = cifradoRsa.encrypt(originalText);
-//            plainText = cifradoRsa.decrypt(cipherText);
-//        } catch (Exception ex) {
-//            Logger.getLogger(CifradoRsa.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        // Printing the Original, Encrypted and Decrypted Text
-//        System.out.println(" Original: " + originalText);
-//        System.out.println("Encrypted: " + cipherText.toString());
-//        System.out.println("Decrypted: " + plainText);
-
-/////////////////////7777
-//        originalText = "Texto que se cifrará con clave privada";
-//        cipherText = cifradoRsa.encrypt(originalText,
-//                keyPair.getPrivate());
-//        plainText = cifradoRsa.decrypt(cipherText,
-//                keyPair.getPublic());
-//        // Printing the Original, Encrypted and Decrypted Text
-//        System.out.println(" Original: " + originalText);
-//        System.out.println("Encrypted: " + cipherText.toString());
-//        System.out.println("Decrypted: " + plainText);
-//
-//        File destinoSerializado = Serializacion.serialize(keyPair.getPublic(),
-//                "publicKey");
-//        PublicKey desSerializado = (PublicKey) Serializacion
-//                .deserialize("publicKey");
-//        System.out.println(desSerializado.getEncoded());
     }
 
+    /**
+     * Caso de prueba para el cifrado y descifrado
+     *
+     * @throws UnsupportedEncodingException
+     */
     public static void testLongerFile() throws UnsupportedEncodingException {
         CifradoRsa cifradoRsa = new CifradoRsa();
         cifradoRsa.generateKey();

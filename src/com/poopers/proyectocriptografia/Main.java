@@ -1,10 +1,14 @@
 package com.poopers.proyectocriptografia;
 
 import com.poopers.proyectocriptografia.comunicacion.AutoridadCertificadora;
-import com.poopers.proyectocriptografia.comunicacion.Servidor;
 import com.poopers.proyectocriptografia.pantallas.EmisorArchivoForm;
 import com.poopers.proyectocriptografia.pantallas.ReceptorArchivoForm;
 
+/**
+ * Esta clase de prueba inicializa la autoridad certificadora, el formulario del
+ * servidor receptor de archivos y una instancia del formulario del cliente
+ * emisor de archivos para ejecutarlos todos en una misma máquina.
+ */
 public class Main {
 
     /**

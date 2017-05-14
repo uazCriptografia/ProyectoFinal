@@ -10,6 +10,10 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Utilidad que se encarga de detectar la IP en la red local de la máquina donde
+ * se ejecuta.
+ */
 public class DetectorIP {
 
     public static String detectarIP() {
@@ -26,7 +30,7 @@ public class DetectorIP {
                     if (!(inetAddress instanceof Inet4Address)) {
                         continue;
                     }
-                    if(actual.getName().equals("wlan0")) {
+                    if (actual.getName().equals("wlan0")) {
                         return inetAddress.getHostAddress();
                     }
                 }

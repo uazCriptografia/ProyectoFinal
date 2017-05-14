@@ -15,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 
+/**
+ * Entidad cuya responsabilidad es recibir archivos cifrados enviados por los
+ * clientes, después de esto prueba con las llaves públicas registradas en la
+ * autoridad certificadora para ver con cuál es posible regresar al mensaje
+ * original, lo que autentica además quien fue el remitente.
+ */
 public class Servidor {
 
     private final int PUERTO_AUTORIDAD = 4321;

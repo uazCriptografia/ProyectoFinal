@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Utilidad para la escritura y lectura de archivos por medio de sus bytes.
+ */
 public class GestorArchivo {
 
     public static void writeBytes(byte[] fileBytes, String filename) {

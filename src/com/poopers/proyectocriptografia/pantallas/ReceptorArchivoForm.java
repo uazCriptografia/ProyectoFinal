@@ -3,16 +3,17 @@ package com.poopers.proyectocriptografia.pantallas;
 import com.poopers.proyectocriptografia.comunicacion.DetectorIP;
 import com.poopers.proyectocriptografia.comunicacion.Servidor;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+/**
+ * Este frame es usado como el servidor, como medio para la comunicación y
+ * visualización de los archivos recibidos.
+ */
 public class ReceptorArchivoForm extends javax.swing.JFrame {
 
     /**
@@ -375,7 +376,7 @@ public class ReceptorArchivoForm extends javax.swing.JFrame {
                         jtfEstadoArchivo.setText("Se recibieron "
                                 + archivo.getBloquesRecibidos() + " bloques");
                         String entidad = null;
-                        if(archivo.getEntidadEmisora() == null) {
+                        if (archivo.getEntidadEmisora() == null) {
                             entidad = "Aún no se determina";
                         } else {
                             entidad = archivo.getEntidadEmisora();

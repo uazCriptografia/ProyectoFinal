@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Utilidad para la serialización y deserialización de objetos en archivos.
+ */
 public class SerializacionObjetos {
+
     /**
      * deserialize to Object from given file. We use the general Object so as
      * that it can work for any Java Class.
